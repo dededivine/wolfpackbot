@@ -1,21 +1,17 @@
 require("dotenv").config();
 const { Telegraf } = require("telegraf");
 const express = require("express");
+
 const app = express();
+app.use(express.json()); // Required to parse Telegram webhook payloads
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-// Set up webhook
-const PORT = process.env.PORT || 3000;
-const URL = process.env.WEBHOOK_URL; // e.g. https://your-render-app.onrender.com
-
 app.use(bot.webhookCallback("/bot"));
-
-// Setup webhook with Telegram
-bot.telegram.setWebhook(`${URL}/bot`);
 
 bot.start(async (ctx) => {
   const { id, first_name, last_name } = ctx.from;
+
   const welcomeMessage = `🔥 Welcome, ${first_name} ${last_name || ""}!\n\n🚀 *Wolfpack Hustle* is the ultimate airdrop crafted for the bold. It's time to claim your spot in the pack and start earning! 💰`;
 
   await ctx.replyWithPhoto("https://i.postimg.cc/hvJ2RFFZ/IMG-20250412-220447.jpg", {
@@ -42,9 +38,20 @@ bot.action("invite", async (ctx) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Wolfpack Hustle Bot is live!");
+  res.send("🐺 Wolfpack Hustle Bot is live and running!");
 });
 
-app.listen(PORT, () => {
+const PORT = process.env.PORT || 3000;
+const URL = process.env.WEBHOOK_URL;
+
+app.listen(PORT, async () => {
   console.log(`Server is running on port ${PORT}`);
+
+  try {
+    const webhookUrl = `${URL}/bot`;
+    await bot.telegram.setWebhook(webhookUrl);
+    console.log(`✅ Webhook set to: ${webhookUrl}`);
+  } catch (error) {
+    console.error("❌ Error setting webhook:", error);
+  }
 });
