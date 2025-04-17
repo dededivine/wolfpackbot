@@ -20,7 +20,7 @@ bot.start(async (ctx) => {
     reply_markup: {
       inline_keyboard: [
         [
-          { text: "💼 Hustle Now", url: "https://t.me/wolfpack_hustle_bot/wolfpack" },
+          { text: "💼 Hustle Now", url: "https://t.me/wolfpack_hustle_bot/wolfpack?startapp=7999719937" },
           { text: "📢 Channel", url: "https://t.me/wolfpackhustle_offcial_link" },
         ],
         [{ text: "👥 Invite Friends", callback_data: "invite" }],
